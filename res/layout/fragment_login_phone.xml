@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+	<RelativeLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:padding="15dp"
+	    android:orientation="horizontal">
+	    
+	    <Button 
+	        android:id="@+id/send_code"
+	        android:layout_width="150dp"
+	        android:layout_height="40dp"
+	        android:background="@color/btn_unuse"
+	        android:layout_alignParentRight="true"
+	        android:textColor="@color/white"
+	        android:text="获取验证码"/>
+	    <com.shengping.pao.view.ClearEditText
+		        android:id="@+id/edit_phone"
+		        android:layout_width="match_parent"
+		        android:layout_height="40dp"
+		        android:hint="输入手机号"
+		        android:background="@drawable/border_btn_login"
+		        android:layout_centerVertical="true"
+		        android:layout_toLeftOf="@id/send_code"
+		        android:layout_marginRight="20dp"
+		        android:textColor="@color/text_black"/>
+	</RelativeLayout>
+	<com.shengping.pao.view.ClearEditText
+		        android:id="@+id/edit_code"
+		        android:layout_width="match_parent"
+		        android:layout_height="40dp"
+		        android:hint="输入收到的验证码"
+		        android:background="@drawable/border_btn_login"
+		        android:layout_marginLeft="15dp"
+		        android:layout_marginRight="15dp"
+		        android:textColor="@color/text_black"/>
+	<Button 
+	    android:id="@+id/btn_login"
+	    android:layout_width="match_parent"
+	    android:layout_height="45dp"
+	    android:layout_marginLeft="15dp"
+	    android:layout_marginRight="15dp"
+	    android:background="@color/btn_unuse"
+	    android:text="登   陆"
+	    android:layout_marginTop="30dp"
+	    android:textColor="@color/white"/>
+</LinearLayout>

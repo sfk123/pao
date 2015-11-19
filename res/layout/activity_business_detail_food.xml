@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+     <include android:id="@+id/lable_title" layout="@layout/layout_title"/>
+    <LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="40dp"
+	        android:orientation="horizontal"
+	        android:background="@color/white" >
+	
+	        <TextView
+	            android:id="@+id/text1"
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:layout_weight="1"
+	            android:gravity="center"
+	            android:text="点菜"
+	            android:textColor="@color/text_black"
+	            android:textSize="16sp" />
+	
+	        <TextView
+	            android:id="@+id/text2"
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:layout_weight="1"
+	            android:gravity="center"
+	            android:text="评价"
+	            android:textColor="@color/text_black"
+	            android:textSize="16sp" />
+	        <TextView
+	            android:id="@+id/text3"
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:layout_weight="1"
+	            android:gravity="center"
+	            android:text="商家详情"
+	            android:textColor="@color/text_black"
+	            android:textSize="16sp" />
+	    </LinearLayout>
+	
+	    <ImageView
+	        android:id="@+id/tabLine"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:contentDescription="@null"
+	        android:scaleType="matrix"
+	        android:src="@drawable/tab_line" />
+	    <View 
+	        android:layout_width="match_parent"
+	        android:layout_height="0.8dp"
+	        android:background="@color/line_color"/>
+	
+	    <android.support.v4.view.ViewPager
+	        android:id="@+id/pager"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:background="@color/activity_bg" />
+
+</LinearLayout>

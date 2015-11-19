@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+     <color name="tab_normal">#888888</color>
+    <color name="tab_select">#f98703</color>
+    <color name="white">#ffffff</color>
+    <color name="activity_bg">#f0f0f0</color>
+    <color name="home_line">#d2d2d2</color>
+    <color name="text_black">#333333</color>
+    <color name="text_gray">#606060</color>
+    <color name="text_blue">#281bd4</color>
+    <color name="text_holder">#e4e4e4</color>
+	<color name="line_color">#c9c9c9</color>
+	<!-- 登陆也tab颜色 -->
+	<color name="login_select">#e5e5e5</color>
+	<!-- 登陆界面按钮不可用颜色 -->
+	<color name="btn_unuse">#cfcfcf</color>
+	<color name="province_line_border">#C7C7C7</color>
+	<drawable name="popup_bg">#7a000000</drawable>
+	<!-- 时间选择器 -->
+    <color name="split_line_gray">#B8B8B8</color>
+    <color name="light_s_gray">#cccccc</color>
+    <color name="light_gray">#b3b3b3</color>
+    <color name="deep_s_gray">#454545</color>
+    <color name="deep_ss_gray">#333333</color>
+    
+    <!-- 点菜部分  菜品类别背景 -->
+   <color name="food_type_bg">#f8f8f8</color>
+</resources>

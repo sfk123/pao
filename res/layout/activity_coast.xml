@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/activity_bg" >
+    <include android:id="@+id/lable_title" layout="@layout/layout_title"/>
+     <RelativeLayout
+			android:id="@+id/lable_bottom"
+          android:layout_width="match_parent"
+          android:layout_alignParentBottom="true"
+          android:layout_height="70dp">
+          <Button
+              android:id="@+id/btn_detail" 
+              android:layout_width="match_parent"
+              android:layout_height="45dp"
+              android:text="收费说明"
+              android:layout_marginLeft="50dp"
+              android:layout_marginRight="50dp"
+              android:textColor="@color/tab_select"
+              android:background="@drawable/border_btn"
+              android:layout_centerInParent="true"/>
+      </RelativeLayout>
+	<com.baidu.mapapi.map.MapView  
+    android:id="@+id/bmapView"  
+    android:layout_above="@id/lable_bottom"
+    android:layout_below="@id/lable_title"
+    android:layout_width="match_parent"  
+    android:layout_height="match_parent"  
+    android:clickable="true" />
+	<TextView 
+	    android:id="@+id/destence"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_marginLeft="20dp"
+	    android:layout_marginRight="20dp"
+	    android:shadowColor="#ff000000"
+	    android:shadowRadius="2"  
+        android:shadowDx="0"  
+        android:shadowDy="0"  
+        android:background="@drawable/bg_denstence"
+        android:gravity="center"
+	    android:layout_below="@id/lable_title"
+	    />
+	    
+</RelativeLayout>

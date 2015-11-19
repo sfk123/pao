@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+     <include android:id="@+id/lable_title" layout="@layout/layout_title"/>
+     <EditText 
+         android:id="@+id/edt_content"
+         android:layout_width="match_parent"
+         android:layout_height="300dp"
+	    android:layout_marginLeft="20dp"
+	    android:layout_marginRight="20dp"
+	    android:layout_marginTop="20dp"
+	    android:gravity="top"
+	    android:hint="请写下对我们的意见或建议，我们会努力为您提供更好的服务"
+         android:background="@drawable/border_corner_suggest"/>
+
+     <Button 
+	    android:layout_width="match_parent"
+	    android:layout_height="45dp"
+	    android:layout_marginLeft="20dp"
+	    android:layout_marginRight="20dp"
+	    android:layout_marginTop="30dp"
+	    android:text="提   交"
+	    android:textSize="18sp"
+	    android:background="@color/tab_select"
+	    android:textColor="@color/white"/>
+</LinearLayout>

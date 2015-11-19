@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#e5e5e5" >
+    <include android:id="@+id/lable_title" layout="@layout/layout_title"/>
+	<ScrollView 
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content">
+	    <LinearLayout 
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="vertical">
+	        <GridView 
+			  android:id="@+id/MyGrid" 
+			  android:layout_width="match_parent" 
+			  android:layout_height="wrap_content" 
+			  android:numColumns="2"
+	    	  android:background="@color/white"
+			  android:paddingLeft="20dp"
+			  android:paddingRight="20dp"
+			  android:verticalSpacing="10dp"
+			  android:stretchMode="columnWidth"
+			  android:paddingTop="10dp"
+			  android:paddingBottom="10dp"
+			  />
+	        <ImageView
+				android:id="@+id/img_dingzhi"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_marginTop="20dp"
+	            android:layout_marginBottom="20dp"/>
+	    </LinearLayout>
+	</ScrollView>
+</LinearLayout>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/activity_bg" >
+    <include android:id="@+id/lable_title" layout="@layout/layout_title"/>
+	<LinearLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_marginTop="10dp"
+	    android:padding="10dp"
+	    android:background="@color/white"
+	    android:orientation="horizontal">
+	    <TextView 
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="说明："
+	        android:textColor="@color/text_gray"/>
+	    <TextView 
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:id="@+id/tv_coast_detail"
+	        android:textColor="@color/text_black"
+	        android:lineSpacingExtra="4dp"
+	        android:text="3公里内跑腿费为10元，超出每公里加收2元;夜间服务费：23:00-6:00加收5元；大雨大雪天气加收5元；特殊业务跑腿费另议"/>
+	</LinearLayout>
+</LinearLayout>

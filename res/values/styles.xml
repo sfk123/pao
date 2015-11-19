@@ -1,0 +1,33 @@
+<resources>
+
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+    </style>
+
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
+	<style name="PopAnimationDownUp">
+        <!-- PopupWindow弹出的效果 -->
+        <item name="android:windowEnterAnimation">@anim/pop_down_up</item>
+        <item name="android:windowExitAnimation">@anim/pop_up_down</item>
+    </style> 
+    <style name="PopupWindowAnimation">  
+        <item name="android:windowEnterAnimation">@anim/popshow_anim</item>  
+        <item name="android:windowExitAnimation">@anim/pophidden_anim</item>  
+    </style>
+    <style name="Line_v">
+            <item name="android:background">@color/line_color</item>
+            <item name="android:layout_width">0.8dp</item>
+            <item name="android:layout_height">fill_parent</item>
+   </style>
+</resources>

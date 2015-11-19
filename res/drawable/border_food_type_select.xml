@@ -1,0 +1,15 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+<!-- 我的页面linearlayout底部边框 -->
+<item>
+  <shape>
+        <solid android:color="@color/tab_select" />
+  </shape>
+</item>
+<!-- This is the line -->
+<item android:left="3dp">
+ <shape>
+       <solid android:color="@color/white" />
+       <padding android:left="10dp" android:right="10dp" android:top="15dp" android:bottom="15dp"/>
+ </shape>
+</item>
+</layer-list>
