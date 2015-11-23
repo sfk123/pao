@@ -44,22 +44,21 @@ public class MyHttp {
 		mQueue.add(jsonObjectRequest);  
 	}
 	public void Http_post(String url,Map<String, String> params,MyHttpCallBack mycallback){
-		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url,
-			    new JSONObject(params), new Response.Listener<JSONObject>() {
-
+		this.callback=mycallback;
+		Request<JSONObject> request = new NormalPostRequest(url,
+			    new Response.Listener<JSONObject>() {
 			        @Override
 			        public void onResponse(JSONObject response) {
-			        	callback.onResponse(response); 
+			        	callback.onResponse(response);
 			        }
 			    }, new Response.ErrorListener() {
-
 			        @Override
 			        public void onErrorResponse(VolleyError error) {
-			        	callback.onErrorResponse(error);  
+			        	callback.onErrorResponse(error);
 			        }
-			    });
-		jsonObjectRequest.setRetryPolicy(policy);
-		mQueue.add(jsonObjectRequest);  
+			    }, params);
+		request.setRetryPolicy(policy);
+		mQueue.add(request);  
 	}
 	public interface MyHttpCallBack{
 		public void onResponse(JSONObject response);

@@ -30,4 +30,14 @@
             <item name="android:layout_width">0.8dp</item>
             <item name="android:layout_height">fill_parent</item>
    </style>
+   <style name="Line">
+            <item name="android:background">@color/line_color</item>
+            <item name="android:layout_width">fill_parent</item>
+            <item name="android:layout_height">1.0dip</item>
+   </style>
+    <!-- 加載彈窗的动画 -->
+    <style name="loadingdialog_animation">
+        <item name="android:windowEnterAnimation">@anim/dialog_in</item>
+        <item name="android:windowExitAnimation">@anim/dialog_out</item>
+    </style>
 </resources>

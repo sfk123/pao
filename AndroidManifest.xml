@@ -221,6 +221,9 @@
         <activity
             android:name=".Activity_Market_Confirm" >
         </activity>
+        <activity
+            android:name=".Activity_Register" >
+        </activity>
         
          <!-- 以下是百度地图相关 -->
          <service android:name="com.baidu.location.f" android:enabled="true" android:process=":remote">

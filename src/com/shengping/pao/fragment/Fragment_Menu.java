@@ -12,6 +12,7 @@ import com.shengping.pao.Activity_MyOrder;
 import com.shengping.pao.Activity_Recharge;
 import com.shengping.pao.Activity_Suggest;
 import com.shengping.pao.Activity_Ticket;
+import com.shengping.pao.MyApplication;
 import com.shengping.pao.R;
 import com.shengping.pao.adapter.Adapter_Home_My;
 import com.shengping.pao.adapter.adapterData;
@@ -28,19 +29,34 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 public class Fragment_Menu extends Fragment implements OnClickListener,OnItemClickListener{
 
 	private View contentView;
+	private TextView tv_username;
 	private ListView list_my;
 	private int[] windowSize;
 	private List<String> names;
+	private Adapter_Home_My adapter;
+	private static Fragment_Menu instence;
+	public static Fragment_Menu getInstence(){
+		return instence;
+	}
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		contentView=inflater.inflate(R.layout.layout_menu, null);
 		windowSize=MyUtil.getWindowSize(getActivity());
 		initView(contentView);
+		instence=this;
 		return contentView;
+	}
+	public void setName(String name){
+		tv_username.setText(name);
+	}
+	public void setMoney(){
+		adapter.setTotalMoney(MyApplication.getInstence().getUser().getMoney());
+		adapter.notifyDataSetChanged();
 	}
 	private void initView(View contentView){
 		RelativeLayout lable_user=(RelativeLayout)contentView.findViewById(R.id.lable_user);
@@ -72,9 +88,11 @@ public class Fragment_Menu extends Fragment implements OnClickListener,OnItemCli
 		adapterData data=new adapterData();
 		data.setIcons(icons);
 		data.setNames(names);
-		Adapter_Home_My adapter=new Adapter_Home_My(getActivity(), data);
+		adapter=new Adapter_Home_My(getActivity(), data);
 		list_my.setAdapter(adapter);
 		list_my.setOnItemClickListener(this);
+		
+		tv_username=(TextView)contentView.findViewById(R.id.tv_username);
 	}
 	@Override
 	public void onClick(View v) {

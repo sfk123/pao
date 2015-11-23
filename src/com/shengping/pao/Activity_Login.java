@@ -3,6 +3,7 @@ package com.shengping.pao;
 import com.shengping.pao.fragment.Fragment_Login_Phone;
 import com.shengping.pao.fragment.Fragment_Login_UserName;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -20,7 +21,12 @@ public class Activity_Login extends FragmentActivity implements OnClickListener{
 	 private ViewPager mViewPager;
 	 private PagerAdapter mPagerAdapter;
 	 
-	 private TextView tv_login_username,tv_login_phone;
+	 private TextView tv_login_username,tv_login_phone,
+	 					tv_register;//ע�ᰴť
+	 private static Activity_Login instence;
+	 public static Activity_Login getInstence(){
+		 return instence;
+	 }
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,10 +38,13 @@ public class Activity_Login extends FragmentActivity implements OnClickListener{
 		tv_login_username.setOnClickListener(this);
 		tv_login_phone=(TextView)findViewById(R.id.tv_login_phone);
 		tv_login_phone.setOnClickListener(this);
+		tv_register=(TextView)findViewById(R.id.tv_register);
+		tv_register.setOnClickListener(this);
 		mViewPager = (ViewPager) findViewById(R.id.viewPager);
 		mPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
 		mViewPager.setAdapter(mPagerAdapter);
 		mViewPager.setOnPageChangeListener(mPageChangeListener);
+		instence=this;
 	}
 	 private OnPageChangeListener mPageChangeListener = new OnPageChangeListener() {
 
@@ -108,6 +117,9 @@ public class Activity_Login extends FragmentActivity implements OnClickListener{
 			mViewPager.setCurrentItem(1);
 		}else if(v.getId()==R.id.tv_login_phone){
 			mViewPager.setCurrentItem(0);
+		}else if(v.getId()==R.id.tv_register){
+			Intent intent=new Intent(this,Activity_Register.class);
+			startActivity(intent);
 		}
 	}
 }

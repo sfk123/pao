@@ -13,6 +13,7 @@ import android.widget.TextView;
 public class Adapter_Home_My  extends BaseAdapter{
 	private LayoutInflater mInflater = null;  
 	private adapterData data;
+	private double totalMoney=0;
 	public Adapter_Home_My(Context context,adapterData data){
 		mInflater=LayoutInflater.from(context);
 		this.data=data;
@@ -52,6 +53,7 @@ public class Adapter_Home_My  extends BaseAdapter{
         if(position==0){
         	holder.arrow_right.setVisibility(View.GONE);
         	holder.tv_total_money.setVisibility(View.VISIBLE);
+        	holder.tv_total_money.setText("гд"+totalMoney);
         }else{
         	holder.arrow_right.setVisibility(View.VISIBLE);
         	holder.tv_total_money.setVisibility(View.GONE);
@@ -63,6 +65,12 @@ public class Adapter_Home_My  extends BaseAdapter{
 	class ViewHolder{
 		ImageView ico,arrow_right;
 		TextView tv_name,tv_total_money;
+	}
+	public double getTotalMoney() {
+		return totalMoney;
+	}
+	public void setTotalMoney(double totalMoney) {
+		this.totalMoney = totalMoney;
 	}
 
 }

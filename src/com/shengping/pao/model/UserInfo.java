@@ -2,7 +2,8 @@ package com.shengping.pao.model;
 
 public class UserInfo {
 	private String userName;
-	private Coast coast;
+	private Coast coast;//≈‹Õ»∑—œÍœ∏
+	private double money;//”√ªß”‡∂Ó
 	public String getUserName() {
 		return userName;
 	}
@@ -17,5 +18,13 @@ public class UserInfo {
 
 	public void setCoast(Coast coast) {
 		this.coast = coast;
+	}
+
+	public double getMoney() {
+		return money;
+	}
+
+	public void setMoney(double money) {
+		this.money = money;
 	}
 }

@@ -4,16 +4,131 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
     <include android:id="@+id/lable_title" layout="@layout/layout_title"/>
+    <ScrollView 
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout 
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <LinearLayout 
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/white">
     <ImageView 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
-        android:src="@drawable/home_logo"/>
+        android:src="@drawable/logo_about"/>
+    <ImageView 
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/about_solgan"/>
 	<TextView 
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_margin="20dp"
 	    android:textColor="@color/text_black"
 	    android:text="@string/about_us"/>
+	
+	</LinearLayout>
+	<LinearLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_marginTop="50dp"
+	    android:orientation="vertical">
+		<LinearLayout 
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:paddingLeft="20dp"
+		    android:paddingRight="20dp"
+		    android:paddingTop="10dp"
+		    android:paddingBottom="10dp"
+		    android:background="@color/white"
+		    android:orientation="horizontal">
+		    <ImageView 
+		        android:layout_width="20dp"
+		        android:layout_height="20dp"
+		        android:src="@drawable/about_kfrx"/>
+		    <TextView 
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_marginLeft="10dp"
+		        android:layout_gravity="center_vertical"
+		        android:text="客服热线:0579-88888888888"/>
+		</LinearLayout>
+		<View 
+		    android:layout_width="match_parent"
+		    android:layout_height="1dp"
+		    android:background="@color/line_color"/>
+		<LinearLayout 
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:paddingLeft="20dp"
+		    android:paddingRight="20dp"
+		    android:paddingTop="10dp"
+		    android:paddingBottom="10dp"
+		    android:background="@color/white"
+		    android:orientation="horizontal">
+		    <ImageView 
+		        android:layout_width="20dp"
+		        android:layout_height="20dp"
+		        android:src="@drawable/about_kfyx"/>
+		    <TextView 
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_marginLeft="10dp"
+		        android:layout_gravity="center_vertical"
+		        android:text="客服邮箱:ptg@ptg.com"/>
+		</LinearLayout>
+		<View 
+		    android:layout_width="match_parent"
+		    android:layout_height="1dp"
+		    android:background="@color/line_color"/>
+		<LinearLayout 
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:paddingLeft="20dp"
+		    android:paddingRight="20dp"
+		    android:paddingTop="10dp"
+		    android:paddingBottom="10dp"
+		    android:background="@color/white"
+		    android:orientation="horizontal">
+		    <ImageView 
+		        android:layout_width="20dp"
+		        android:layout_height="20dp"
+		        android:src="@drawable/about_lxdz"/>
+		    <TextView 
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_marginLeft="10dp"
+		        android:layout_gravity="center_vertical"
+		        android:text="联系地址：浙江金华"/>
+		</LinearLayout>
+		<View 
+		    android:layout_width="match_parent"
+		    android:layout_height="1dp"
+		    android:background="@color/line_color"/>
+		<LinearLayout 
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:paddingLeft="20dp"
+		    android:paddingRight="20dp"
+		    android:paddingTop="10dp"
+		    android:paddingBottom="10dp"
+		    android:gravity="center"
+		    android:background="@color/white"
+		    android:orientation="horizontal">
+		    <TextView 
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="客服在线时间：8：00-17：00"/>
+		</LinearLayout>
+	</LinearLayout>                                                           
+	</LinearLayout>
+	</ScrollView>
 </LinearLayout>
