@@ -1,6 +1,7 @@
 package com.shengping.pao.model;
 
 public class UserInfo {
+	private int id;
 	private String userName;
 	private double money;//”√ªß”‡∂Ó
 	private String token;
@@ -26,5 +27,13 @@ public class UserInfo {
 
 	public void setToken(String token) {
 		this.token = token;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }

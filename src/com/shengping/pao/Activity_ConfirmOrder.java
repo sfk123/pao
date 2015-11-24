@@ -3,11 +3,18 @@ package com.shengping.pao;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.json.JSONObject;
 
+import com.android.volley.VolleyError;
 import com.shengping.pao.model.PaotuiInfo;
+import com.shengping.pao.util.MyHttp;
 import com.shengping.pao.util.MyUtil;
+import com.shengping.pao.util.UrlUtil;
+import com.shengping.pao.util.MyHttp.MyHttpCallBack;
+import com.shengping.pao.view.LoadingDialog;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -20,10 +27,18 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class Activity_ConfirmOrder  extends Activity implements OnClickListener{
+public class Activity_ConfirmOrder  extends Activity implements OnClickListener,MyHttpCallBack{
 	private ImageView img_select_1,img_select_2,img_select_3,img_select_4;
+	private TextView tv_cost,//跑腿费
+					money_total,//合计支付
+					tv_remarkes,//备注
+					tv_phone;//电话
+	private Button btn_confirm;//结算按钮
 	private String pay_type="pay_normal";
 	private PaotuiInfo paotui;
+	private double coast;//费用
+	private JSONObject location_start,location_end;
+	private String address_start,address_end,transportation;
 	@SuppressLint("SimpleDateFormat")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,13 +47,16 @@ public class Activity_ConfirmOrder  extends Activity implements OnClickListener{
 		TextView tv_title=(TextView)findViewById(R.id.tv_title);
 		tv_title.setText("确定订单");
 		TextView tv_start=(TextView)findViewById(R.id.tv_start);
-		tv_start.setText(getIntent().getStringExtra("start"));
+		address_start=getIntent().getStringExtra("start");
+		transportation=getIntent().getStringExtra("transportation");
+		tv_start.setText(address_start);
 		TextView tv_end=(TextView)findViewById(R.id.tv_end);
-		tv_end.setText(getIntent().getStringExtra("end"));
+		address_end=getIntent().getStringExtra("end");
+		tv_end.setText(address_end);
 		ImageView btn_back=(ImageView)findViewById(R.id.btn_back);
-		TextView tv_remarkes=(TextView)findViewById(R.id.tv_remarkes);
+		tv_remarkes=(TextView)findViewById(R.id.tv_remarkes);
 		tv_remarkes.setText(getIntent().getStringExtra("remarkes"));
-		TextView tv_phone=(TextView)findViewById(R.id.tv_phone);
+		tv_phone=(TextView)findViewById(R.id.tv_phone);
 		tv_phone.setText(getIntent().getStringExtra("phone"));
 		Button btn_confirm=(Button)findViewById(R.id.btn_confirm);
 		RelativeLayout lable_coast=(RelativeLayout)findViewById(R.id.lable_coast);
@@ -52,12 +70,18 @@ public class Activity_ConfirmOrder  extends Activity implements OnClickListener{
 		img_select_2=(ImageView)findViewById(R.id.img_select_2);
 		img_select_3=(ImageView)findViewById(R.id.img_select_3);
 		img_select_4=(ImageView)findViewById(R.id.img_select_4);
+		btn_confirm=(Button)findViewById(R.id.btn_confirm);
+		btn_confirm.setOnClickListener(this);
 		
+		TextView money_total=(TextView)findViewById(R.id.money_total);
+		TextView tv_cost=(TextView)findViewById(R.id.tv_cost);
 		TextView tv_destence=(TextView)findViewById(R.id.tv_destence);
-		tv_destence.setText("路程"+getIntent().getDoubleExtra("destence", 0)+"公里");
+		double destence=getIntent().getDoubleExtra("destence", 0);
+		tv_destence.setText("路程"+destence+"公里");
 		//下面计算跑腿费
 		try{
 			paotui=MyApplication.getInstence().getPaotuiInfo();
+			coast=paotui.getQibujia();//起步价
 			Calendar cNow = Calendar.getInstance();
 			Calendar cBegin = Calendar.getInstance();
 			Calendar cEnd = Calendar.getInstance();
@@ -65,12 +89,31 @@ public class Activity_ConfirmOrder  extends Activity implements OnClickListener{
 			JSONObject Midnight_time=paotui.getMidnight_time();
 			Date date_start=sdf.parse(Midnight_time.getString("start"));  
 			cBegin.setTime(date_start);
-			System.out.println("开始时间："+cBegin.get(Calendar.HOUR_OF_DAY)+":"+cBegin.get(Calendar.MINUTE));
+//			System.out.println("开始时间："+cBegin.get(Calendar.HOUR_OF_DAY)+":"+cBegin.get(Calendar.MINUTE));
 			Date date_end=sdf.parse(Midnight_time.getString("end"));  
 			cEnd.setTime(date_end);
 			if (cNow.compareTo(cBegin) > 0 && cNow.compareTo(cEnd) < 0) {//夜间服务
-				
+				coast=coast+paotui.getMidnight_cost();
 			}
+			if(!paotui.getTianqi().equals("正常")){//恶劣天气费
+				coast=coast+paotui.getTianqifei();
+			}
+			if(destence>paotui.getMRGLS()){//超出默认公里费用
+				double d_value=destence-paotui.getMRGLS();
+				int d_value_int=(int)d_value;
+				if(d_value>d_value_int){
+					d_value_int++;
+				}
+				coast=coast+d_value_int*paotui.getLJPTF();
+			}
+			tv_cost.setText("￥"+coast);
+			money_total.setText(tv_cost.getText());
+			location_start=new JSONObject();
+			location_start.put("lat", getIntent().getDoubleExtra("lat_start", 0));
+			location_start.put("long", getIntent().getDoubleExtra("long_start", 0));
+			location_end=new JSONObject();
+			location_end.put("lat", getIntent().getDoubleExtra("lat_end", 0));
+			location_end.put("long", getIntent().getDoubleExtra("long_end", 0));
 		}catch(Exception e){
 			e.printStackTrace();
 			MyUtil.alert("出现错误："+e.getMessage(), this);
@@ -119,6 +162,38 @@ public class Activity_ConfirmOrder  extends Activity implements OnClickListener{
 		}else if(v.getId()==R.id.lable_ticket){
 			Intent intent=new Intent(this,Activity_Ticket.class);
 			startActivity(intent);
+		}else if(v.getId()==R.id.btn_confirm){
+			if(pay_type.equals("pay_express")){
+				LoadingDialog.showWindow(this);
+				Map<String, String> params=new HashMap<String, String>();
+				params.put("token", MyApplication.getInstence().getUser().getToken());
+				params.put("UserId", MyApplication.getInstence().getUser().getId()+"");
+				params.put("PayMoney", coast+"");
+				params.put("FwType", "3");//帮我送类型
+				params.put("FwType", "0");//货到付款
+				params.put("Areaid", MyApplication.getInstence().getAreaId());//当前城市编码
+				params.put("Ordercontent", tv_remarkes.getText().toString());//订单备注
+				params.put("phone", tv_phone.getText().toString());//电话
+				params.put("location_start", location_start.toString());//
+				params.put("location_end", location_end.toString());//
+				params.put("address_start", address_start);//
+				params.put("address_end", address_end);//
+				params.put("transportation", transportation);//交通工具
+				MyHttp http=new MyHttp(this);
+				http.Http_post(UrlUtil.getUrl("downOrder", UrlUtil.Service), params, this);
+			}else{
+//				params.put("FwType", "1");
+			}
 		}
+	}
+	@Override
+	public void onResponse(JSONObject response) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void onErrorResponse(VolleyError error) {
+		// TODO Auto-generated method stub
+		
 	}
 }

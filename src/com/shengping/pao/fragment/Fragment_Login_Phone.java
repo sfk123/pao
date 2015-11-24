@@ -159,6 +159,7 @@ public class Fragment_Login_Phone extends Fragment implements OnClickListener,My
 				if(response.getBoolean("status")){
 					JSONObject data=response.getJSONObject("data");
 					UserInfo user=new UserInfo();
+					user.setId(data.getInt("m_ID"));
 					user.setUserName(data.getString("m_Mobile"));
 					user.setMoney(data.getDouble("m_SYMoney"));
 					user.setToken(data.getString("token"));

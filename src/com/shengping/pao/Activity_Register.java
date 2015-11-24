@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import com.android.volley.VolleyError;
 import com.shengping.pao.fragment.Fragment_Menu;
+import com.shengping.pao.model.UserInfo;
 import com.shengping.pao.util.MyHttp;
 import com.shengping.pao.util.MyUtil;
 import com.shengping.pao.util.UrlUtil;
@@ -196,6 +197,13 @@ public class Activity_Register extends Activity implements OnClickListener,MyHtt
 				}
 			}else if(httpTpye==http_submit){
 				if(response.getBoolean("status")){
+					JSONObject data=response.getJSONObject("data");
+					UserInfo user=new UserInfo();
+					user.setId(data.getInt("m_ID"));
+					user.setUserName(data.getString("m_Mobile"));
+					user.setMoney(data.getDouble("m_SYMoney"));
+					user.setToken(data.getString("token"));
+					MyApplication.getInstence().setUser(user);
 					Activity_Login.getInstence().finish();
 					Fragment_Menu.getInstence().setName(tv_phone.getText().toString());
 					finish();

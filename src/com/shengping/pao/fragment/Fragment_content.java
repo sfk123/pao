@@ -34,6 +34,8 @@ import com.shengping.pao.util.MyUtil;
 import com.shengping.pao.util.UrlUtil;
 import com.shengping.pao.util.MyHttp.MyHttpCallBack;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -235,6 +237,7 @@ public class Fragment_content extends Fragment implements OnItemClickListener,On
 		try {
 			System.out.println(response);
 			if(response.getBoolean("status")){
+				if(response.has("data")&&!response.getString("data").equals("null")){
 				JSONObject data=response.getJSONObject("data");
 				PaotuiInfo paotui=new PaotuiInfo();
 				paotui.setId(data.getInt("id"));
@@ -250,6 +253,34 @@ public class Fragment_content extends Fragment implements OnItemClickListener,On
 				paotui.setTime(data.getString("yinYeTime"));
 				MyApplication.getInstence().setPaotuiInfo(paotui);
 				refreshView();
+				}else{
+					new AlertDialog.Builder(getActivity())  
+	                .setTitle("系统提示")  
+	                .setMessage("您所在的地区尚未开通跑腿哥服务，切换到默认城市？")  
+	                .setPositiveButton(  
+	                        "确定",  
+	                        new DialogInterface.OnClickListener() {  
+
+	                            public void onClick(DialogInterface dialog,int which) {  
+	                            	Map<String, String> params=new HashMap<String, String>();
+	                        		params.put("areaid", "330703");
+	                        		MyApplication.getInstence().setAreaId("330703");
+	                        		tv_current_city.setText("金华市  金东区");
+	                        		MyHttp http=new MyHttp(getContext());
+	                        		http.Http_post(UrlUtil.getUrl("getpaotui", UrlUtil.Service), params, Fragment_content.this);
+	                            }  
+	                        })  
+	                .setNegativeButton(  
+	                        "取消",  
+	                        new DialogInterface.OnClickListener() {  
+
+	                            public void onClick(  
+	                                    DialogInterface dialog,  
+	                                    int which) {  
+	                               getActivity().finish();
+	                            }  
+	                        }).show();  
+				}
 			}
 		} catch (JSONException e) {
 			Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
