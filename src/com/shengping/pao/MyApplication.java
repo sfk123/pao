@@ -13,6 +13,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.shengping.pao.model.Food;
+import com.shengping.pao.model.PaotuiInfo;
 import com.shengping.pao.model.Product;
 import com.shengping.pao.model.UserInfo;
 
@@ -26,7 +27,9 @@ public class MyApplication extends Application{
 	private DisplayImageOptions options;
 	private static Context mContext;
 	private UserInfo user;//用户登录后的信息
-	private List<Product> shopmarket;;
+	private PaotuiInfo paotuiInfo;
+	private List<Product> shopmarket;
+	private String areaId;
 	private static MyApplication application;
 	public static MyApplication getInstence(){
 		return application;
@@ -37,7 +40,7 @@ public class MyApplication extends Application{
     {
         super.onCreate();
 		SDKInitializer.initialize(this);  
-//        UpdateConfig.setDebug(true);//此处发布应用时请注释掉
+//      UpdateConfig.setDebug(true);//此处发布应用时请注释掉
 //		UmengUpdateAgent.setUpdateOnlyWifi(false);
 		initImageLoader();
     	options = new DisplayImageOptions.Builder()
@@ -100,6 +103,18 @@ public class MyApplication extends Application{
 	}
 	public void setUser(UserInfo user) {
 		this.user = user;
+	}
+	public PaotuiInfo getPaotuiInfo() {
+		return paotuiInfo;
+	}
+	public void setPaotuiInfo(PaotuiInfo paotuiInfo) {
+		this.paotuiInfo = paotuiInfo;
+	}
+	public String getAreaId() {
+		return areaId;
+	}
+	public void setAreaId(String areaId) {
+		this.areaId = areaId;
 	}
 	
 }

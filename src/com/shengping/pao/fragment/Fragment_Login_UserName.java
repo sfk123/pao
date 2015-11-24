@@ -112,6 +112,7 @@ public class Fragment_Login_UserName extends Fragment implements TextWatcher,OnC
 				UserInfo user=new UserInfo();
 				user.setUserName(data.getString("m_Mobile"));
 				user.setMoney(data.getDouble("m_SYMoney"));
+				user.setToken(data.getString("token"));
 				Fragment_Menu.getInstence().setName(data.getString("m_Mobile"));
 				MyApplication.getInstence().setUser(user);
 				getActivity().finish();

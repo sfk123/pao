@@ -1,5 +1,15 @@
 package com.shengping.pao;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
+import org.json.JSONObject;
+
+import com.shengping.pao.model.PaotuiInfo;
+import com.shengping.pao.util.MyUtil;
+
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +23,8 @@ import android.widget.TextView;
 public class Activity_ConfirmOrder  extends Activity implements OnClickListener{
 	private ImageView img_select_1,img_select_2,img_select_3,img_select_4;
 	private String pay_type="pay_normal";
+	private PaotuiInfo paotui;
+	@SuppressLint("SimpleDateFormat")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -40,6 +52,29 @@ public class Activity_ConfirmOrder  extends Activity implements OnClickListener{
 		img_select_2=(ImageView)findViewById(R.id.img_select_2);
 		img_select_3=(ImageView)findViewById(R.id.img_select_3);
 		img_select_4=(ImageView)findViewById(R.id.img_select_4);
+		
+		TextView tv_destence=(TextView)findViewById(R.id.tv_destence);
+		tv_destence.setText("路程"+getIntent().getDoubleExtra("destence", 0)+"公里");
+		//下面计算跑腿费
+		try{
+			paotui=MyApplication.getInstence().getPaotuiInfo();
+			Calendar cNow = Calendar.getInstance();
+			Calendar cBegin = Calendar.getInstance();
+			Calendar cEnd = Calendar.getInstance();
+			SimpleDateFormat sdf=new SimpleDateFormat("HH:mm");//小写的mm表示的是分钟  
+			JSONObject Midnight_time=paotui.getMidnight_time();
+			Date date_start=sdf.parse(Midnight_time.getString("start"));  
+			cBegin.setTime(date_start);
+			System.out.println("开始时间："+cBegin.get(Calendar.HOUR_OF_DAY)+":"+cBegin.get(Calendar.MINUTE));
+			Date date_end=sdf.parse(Midnight_time.getString("end"));  
+			cEnd.setTime(date_end);
+			if (cNow.compareTo(cBegin) > 0 && cNow.compareTo(cEnd) < 0) {//夜间服务
+				
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			MyUtil.alert("出现错误："+e.getMessage(), this);
+		}
 	}
 	private void setClickListener(View...views){
 		for(View v:views){
