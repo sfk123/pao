@@ -21,6 +21,7 @@ import android.os.Handler;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.View;
@@ -128,8 +129,10 @@ public class Activity_Register extends Activity implements OnClickListener,MyHtt
 			}
 			break;
 		case R.id.tishi2:
-//			Intent intent=new Intent(this,Activity_agreement.class);
-//			startActivity(intent);
+			Intent intent=new Intent(this,Activity_WebView.class);
+			intent.putExtra("title", "用户协议");
+			intent.putExtra("url", UrlUtil.getAgreementUrl());
+			startActivity(intent);
 			break;
 		case R.id.tv_btn_sendcode:
 			if(tv_phone.getText().toString().trim().equals("")){

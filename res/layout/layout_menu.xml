@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView 
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent">
+<RelativeLayout 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -40,11 +44,24 @@
 	            android:layout_centerVertical="true"/>
 	    </RelativeLayout>
 	</RelativeLayout>
-	<ListView 
+	<com.shengping.pao.view.MyListView
 	    android:id="@+id/list_my"
 	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_below="@id/lable_user"
 	    android:divider="@null"
 	    android:scrollbars="none"
-	    android:layout_marginTop="10dp"></ListView>
-</LinearLayout>
+	    android:layout_marginTop="10dp"></com.shengping.pao.view.MyListView>
+	<TextView 
+	    android:id="@+id/tv_btn_logout"
+	    android:layout_width="match_parent"
+	    android:layout_height="40dp"
+	    android:layout_margin="20dp"
+	    android:layout_below="@id/list_my"
+	    android:gravity="center"
+	    android:visibility="gone"
+	    android:text="安全退出"
+	    android:textColor="@color/white"
+	    android:background="@drawable/corner_bg"/>
+</RelativeLayout>
+</ScrollView>

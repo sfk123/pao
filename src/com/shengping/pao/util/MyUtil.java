@@ -57,6 +57,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -562,4 +564,22 @@ public class MyUtil {
 			}
 			return bitmap;
 		}
+		public static void setListViewHeightBasedOnChildren(ListView listView, int attHeight) {  
+	        ListAdapter listAdapter = listView.getAdapter();   
+	        if (listAdapter == null) {  
+	            // pre-condition  
+	            return;  
+	        }  
+	  
+	        int totalHeight = 0;  
+	        for (int i = 0; i < listAdapter.getCount(); i++) {  
+	            View listItem = listAdapter.getView(i, null, listView);  
+	            listItem.measure(0, 0);  
+	            totalHeight += listItem.getMeasuredHeight();  
+	        }  
+	  
+	        ViewGroup.LayoutParams params = listView.getLayoutParams();  
+	        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1)) + attHeight;  
+	        listView.setLayoutParams(params);  
+	    }  
 }

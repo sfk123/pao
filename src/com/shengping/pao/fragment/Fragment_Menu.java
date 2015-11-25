@@ -24,6 +24,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -34,11 +35,13 @@ import android.widget.TextView;
 public class Fragment_Menu extends Fragment implements OnClickListener,OnItemClickListener{
 
 	private View contentView;
-	private TextView tv_username;
+	private TextView tv_username,//用户名
+					tv_btn_logout;//退出按钮
 	private ListView list_my;
 	private int[] windowSize;
 	private List<String> names;
 	private Adapter_Home_My adapter;
+	private boolean listViewInit=false;
 	private static Fragment_Menu instence;
 	public static Fragment_Menu getInstence(){
 		return instence;
@@ -49,10 +52,14 @@ public class Fragment_Menu extends Fragment implements OnClickListener,OnItemCli
 		windowSize=MyUtil.getWindowSize(getActivity());
 		initView(contentView);
 		instence=this;
+		if(MyApplication.getInstence().getUser().getToken()!=null){
+			setName(MyApplication.getInstence().getUser().getUserName());
+		}
 		return contentView;
 	}
 	public void setName(String name){
 		tv_username.setText(name);
+		tv_btn_logout.setVisibility(View.VISIBLE);
 	}
 	public void setMoney(){
 		adapter.setTotalMoney(MyApplication.getInstence().getUser().getMoney());
@@ -91,8 +98,21 @@ public class Fragment_Menu extends Fragment implements OnClickListener,OnItemCli
 		adapter=new Adapter_Home_My(getActivity(), data);
 		list_my.setAdapter(adapter);
 		list_my.setOnItemClickListener(this);
+//		list_my.setOnFocusChangeListener(new OnFocusChangeListener() {
+//			
+//			@Override
+//			public void onFocusChange(View arg0, boolean arg1) {
+//				if(!listViewInit&&arg1){
+//					listViewInit=true;
+//					MyUtil.setListViewHeightBasedOnChildren(list_my,MyUtil.dip2px(getContext(), 1));
+//				}
+//				
+//			}
+//		});
 		
 		tv_username=(TextView)contentView.findViewById(R.id.tv_username);
+		tv_btn_logout=(TextView)contentView.findViewById(R.id.tv_btn_logout);
+		tv_btn_logout.setOnClickListener(this);
 	}
 	@Override
 	public void onClick(View v) {

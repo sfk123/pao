@@ -20,6 +20,7 @@ import com.baidu.mapapi.search.route.WalkingRouteResult;
 import com.shengping.pao.PopupWindow.Select_Transportation;
 import com.shengping.pao.PopupWindow.Select_Transportation.SelectListener;
 import com.shengping.pao.fragment.Fragment_content;
+import com.shengping.pao.model.Address;
 import com.shengping.pao.model.PaotuiInfo;
 import com.shengping.pao.util.MyHttp;
 import com.shengping.pao.util.MyUtil;
@@ -41,24 +42,28 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class Activity_Help_Push extends Activity implements OnClickListener,DrawableRightListener,MyHttpCallBack{
+public class Activity_Help_Push extends Activity implements OnClickListener,MyHttpCallBack{
 	private ImageView btn_back;
 	private Button btn_confirm;
-	private TextView tv_title,tv_transportation,location_end_select;
+	private TextView tv_title,tv_transportation;
 	private EditText location_start_select;
-	private EditText location_start_input,location_end_input,tv_message;
-	private XEditText tv_phone;
+	private EditText location_start_input,tv_message;
+	private LinearLayout layout_add_address;
+	private RelativeLayout layout_address_default;
 	private SelectListener selectListener;
 	private final int request_start=1;
+	private final int request_end=2;
 	private LatLng start,end;
 	private RoutePlanSearch mSearch;
 	private double destence;//路程
 	private boolean http_paotui=false;
 	private boolean http_destence=false;
+	private int addressid=0;//收货地址id
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -79,17 +84,14 @@ public class Activity_Help_Push extends Activity implements OnClickListener,Draw
 		};
 		location_start_select=(EditText)findViewById(R.id.location_start_select);
 		location_start_select.setOnClickListener(this);
-		location_end_select=(TextView)findViewById(R.id.location_end_select);
-		location_end_select.setClickable(true);
-		location_end_select.setOnClickListener(this);
+		layout_address_default=(RelativeLayout)findViewById(R.id.layout_address_default);
 		btn_confirm=(Button)findViewById(R.id.btn_confirm);
 		btn_confirm.setOnClickListener(this);
 		
 		location_start_input=(EditText)findViewById(R.id.location_start_input);
-		location_end_input=(EditText)findViewById(R.id.location_end_input);
-		tv_phone=(XEditText)findViewById(R.id.tv_phone);
-		tv_phone.setDrawableRightListener(this);
 		tv_message=(EditText)findViewById(R.id.tv_message);
+		layout_add_address=(LinearLayout)findViewById(R.id.layout_add_address);
+		layout_add_address.setOnClickListener(this);
 	}
 	@Override
 	public void onClick(View v) {
@@ -105,21 +107,13 @@ public class Activity_Help_Push extends Activity implements OnClickListener,Draw
 			intent.putExtra("type", "start");
 			intent.putExtra("title", "货在...");
 			startActivityForResult(intent, request_start);
-		}else if(v.getId()==R.id.location_end_select){
-			Intent intent=new Intent(this,Activity_SelectLocation.class);
-			intent.putExtra("current_location", location_start_select.getText().toString());
-			intent.putExtra("type", "end");
-			intent.putExtra("title", "货到...");
-			startActivityForResult(intent, request_start);
 		}else if(v.getId()==R.id.btn_confirm){
 			if(start==null){
 				MyUtil.alert("请选择发货地址",this);
 				return;
-			}else if(end==null){
+			}else if(addressid==0){
 				MyUtil.alert("请选择收货地址",this);
 				return;
-			}else if(tv_phone.getText().toString().equals("")){
-				MyUtil.alert("请填写收货人电话！",this);
 			}else{
 				http_destence=false;
 				http_paotui=false;
@@ -135,6 +129,9 @@ public class Activity_Help_Push extends Activity implements OnClickListener,Draw
 		                .from(stNode)
 		                .to(enNode));
 			}
+		}else if(v.getId()==R.id.layout_add_address){
+			Intent intent=new Intent(this,Activity_SelectAddress.class);
+			startActivityForResult(intent, request_end);
 		}
 	}
 	@Override
@@ -150,66 +147,22 @@ public class Activity_Help_Push extends Activity implements OnClickListener,Draw
 				   location_start_select.setText(address);
 				   start=new LatLng(lat, latlong);
 			   }else{
-				   location_end_select.setText(address);
-				   end=new LatLng(lat, latlong);
+//				   location_end_select.setText(address);
+//				   end=new LatLng(lat, latlong);
 			   }
-			}else if(requestCode==2){
-				Uri contactData = data.getData();  
-                @SuppressWarnings("deprecation")
-				Cursor cursor = managedQuery(contactData, null, null, null,  
-                        null);  
-                cursor.moveToFirst();  
-                String num = getContactPhone(cursor);  
-                tv_phone.setText(num);
+			}else if(requestCode==request_end){
+				layout_add_address.setVisibility(View.GONE);
+				layout_address_default.setVisibility(View.VISIBLE);
+				Address address=(Address)data.getSerializableExtra("address");
+				addressid=address.getId();
+				TextView tv_name=(TextView)layout_address_default.findViewById(R.id.tv_name);
+				tv_name.setText(address.getRealName());
+				TextView tv_phone=(TextView)layout_address_default.findViewById(R.id.tv_phone);
+				tv_phone.setText(address.getMobile());
+				TextView tv_address=(TextView)layout_address_default.findViewById(R.id.tv_address);
+				tv_address.setText(address.getAddress());
 			}
 		}
-	}
-	private String getContactPhone(Cursor cursor) {  
-        // TODO Auto-generated method stub  
-        int phoneColumn = cursor  
-                .getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER);  
-        int phoneNum = cursor.getInt(phoneColumn);  
-        String result = "";  
-        if (phoneNum > 0) {  
-            // 获得联系人的ID号  
-            int idColumn = cursor.getColumnIndex(ContactsContract.Contacts._ID);  
-            String contactId = cursor.getString(idColumn);  
-            // 获得联系人电话的cursor  
-            Cursor phone = getContentResolver().query(  
-                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI,  
-                    null,  
-                    ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "="  
-                            + contactId, null, null);  
-            if (phone.moveToFirst()) {  
-                for (; !phone.isAfterLast(); phone.moveToNext()) {  
-                    int index = phone  
-                            .getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);  
-                    int typeindex = phone  
-                            .getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE);  
-                    int phone_type = phone.getInt(typeindex);  
-                    String phoneNumber = phone.getString(index);  
-                    result = phoneNumber;  
-//                  switch (phone_type) {//此处请看下方注释  
-//                  case 2:  
-//                      result = phoneNumber;  
-//                      break;  
-//  
-//                  default:  
-//                      break;  
-//                  }  
-                }  
-                if (!phone.isClosed()) {  
-                    phone.close();  
-                }  
-            }  
-        }  
-        return result;  
-    }  
-	@Override
-	public void onDrawableRightClick(View view) {
-		Intent intent = new Intent(Intent.ACTION_PICK,  
-                ContactsContract.Contacts.CONTENT_URI);  
-        startActivityForResult(intent, 2);  
 	}
 	@Override
 	public void onResponse(JSONObject response) {
@@ -300,8 +253,8 @@ public class Activity_Help_Push extends Activity implements OnClickListener,Draw
 			intent.putExtra("long_start", start.longitude);
 			intent.putExtra("long_end", end.longitude);
 			intent.putExtra("start", location_start_select.getText().toString()+" "+location_start_input.getText().toString());
-			intent.putExtra("end", location_end_select.getText().toString()+" "+location_end_input.getText().toString());
-			intent.putExtra("phone", tv_phone.getText().toString());
+//			intent.putExtra("end", location_end_select.getText().toString()+" "+location_end_input.getText().toString());
+//			intent.putExtra("phone", tv_phone.getText().toString());
 			intent.putExtra("transportation", tv_transportation.getText().toString());
 			intent.putExtra("remarkes", tv_message.getText().toString());
 			intent.putExtra("destence", destence);

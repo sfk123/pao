@@ -21,6 +21,7 @@ import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.shengping.pao.Activity_Help_Buy;
 import com.shengping.pao.Activity_Help_Push;
+import com.shengping.pao.Activity_Login;
 import com.shengping.pao.Activity_Market;
 import com.shengping.pao.MyApplication;
 import com.shengping.pao.R;
@@ -127,14 +128,14 @@ public class Fragment_content extends Fragment implements OnItemClickListener,On
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 		try {
-			if(listdata.get(arg2).getString("title").equals("帮我送")){
+			if(listdata.get(arg2).getString("title").equals("帮我送")&&checkLogin()){
 				Intent intent=new Intent(getContext(),Activity_Help_Push.class);
 				startActivity(intent);
-			}else if(listdata.get(arg2).getString("title").equals("帮我买")){
+			}else if(listdata.get(arg2).getString("title").equals("帮我买")&&checkLogin()){
 				Intent intent=new Intent(getContext(),Activity_Help_Buy.class);
 				intent.putExtra("type", Activity_Help_Buy.type_help_buy);
 				startActivity(intent);
-			}else if(listdata.get(arg2).getString("title").equals("帮我办")){
+			}else if(listdata.get(arg2).getString("title").equals("帮我办")&&checkLogin()){
 				Intent intent=new Intent(getContext(),Activity_Help_Buy.class);
 				intent.putExtra("type", Activity_Help_Buy.type_help_handle);
 				startActivity(intent);
@@ -142,6 +143,15 @@ public class Fragment_content extends Fragment implements OnItemClickListener,On
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+	private boolean checkLogin(){
+		if(MyApplication.getInstence().getUser().getToken()!=null){
+			return true;
+		}else{
+			Intent intent=new Intent(getContext(),Activity_Login.class);
+			startActivity(intent);
+			return false;
 		}
 	}
 	@Override

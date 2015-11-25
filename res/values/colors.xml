@@ -25,4 +25,7 @@
     
     <!-- 点菜部分  菜品类别背景 -->
    <color name="food_type_bg">#f8f8f8</color>
+   <color name="address_default">#5e6b85</color>
+   <drawable name="webview_progress">#f98703</drawable>
+   
 </resources>

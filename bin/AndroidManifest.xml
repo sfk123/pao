@@ -224,6 +224,15 @@
         <activity
             android:name=".Activity_Register" >
         </activity>
+        <activity
+            android:name=".Activity_WebView" >
+        </activity>
+        <activity
+            android:name=".Activity_CreatAddress" >
+        </activity>
+        <activity
+            android:name=".Activity_SelectAddress" >
+        </activity>
         
          <!-- 以下是百度地图相关 -->
          <service android:name="com.baidu.location.f" android:enabled="true" android:process=":remote">

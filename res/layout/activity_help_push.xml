@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/activity_bg">
-	<include layout="@layout/layout_title"/>"
+	<include layout="@layout/layout_title"/>
    <LinearLayout 
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
@@ -18,7 +18,7 @@
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
            android:layout_marginTop="5dp"
-           android:text="发货地址："
+           android:text="我在哪："
            android:textColor="@color/text_black"
            android:textSize="16sp"/>
        <LinearLayout 
@@ -51,6 +51,7 @@
                android:textColorHint="@color/text_holder"/>
        </LinearLayout>
    </LinearLayout>
+   <!-- 
    <LinearLayout 
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
@@ -64,7 +65,7 @@
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
            android:layout_marginTop="5dp"
-           android:text="收货地址："
+           android:text="送到哪："
            android:textColor="@color/text_black"
            android:textSize="16sp"/>
        <LinearLayout 
@@ -110,14 +111,14 @@
            android:layout_height="wrap_content"
            android:textColor="@color/text_black"
            android:textSize="16sp"
-           android:text="收货电话："/>
+           android:text="联系电话："/>
        <com.shengping.pao.view.XEditText  
                android:id="@+id/tv_phone"
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
                android:textColor="@color/text_black"
                android:gravity="center_vertical"
-               android:hint="收货人电话"
+               android:hint="联系人电话"
                android:background="@null"
                android:inputType="phone|textPhonetic"
                android:drawableRight="@drawable/ico_directory"
@@ -125,13 +126,93 @@
    </LinearLayout>
    <View android:layout_width="match_parent"
        android:layout_height="1dp"
-       android:background="@color/activity_bg"/>
+       android:background="@color/activity_bg"/>  -->
+       <LinearLayout 
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:orientation="horizontal"
+           android:layout_marginTop="20dp"
+	        android:background="@drawable/border_bottom_gray">
+           <TextView 
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:textColor="@color/text_black"
+               android:layout_marginLeft="10dp"
+               android:layout_gravity="center_vertical"
+               android:textSize="16sp"
+               android:text="送到哪："/>
+        <LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical" >
+	    <LinearLayout 
+	        android:id="@+id/layout_add_address"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:padding="10dp"
+	        android:orientation="horizontal">
+	        <ImageView 
+	            android:layout_width="25dp"
+	            android:layout_height="25dp"
+	            android:src="@drawable/jia_color"/>
+	        <TextView 
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:textColor="@color/tab_select"
+	            android:textSize="16sp"
+	            android:layout_marginLeft="10dp"
+	            android:layout_gravity="center_vertical"
+	            android:text="选择收货地址"/>
+	    </LinearLayout>
+	    <RelativeLayout
+	        android:id="@+id/layout_address_default"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:padding="10dp"
+	        android:visibility="gone">
+	        <ImageView 
+	            android:id="@+id/img_arrow_right"
+	            android:layout_width="25dp"
+	            android:layout_height="25dp"
+	            android:layout_alignParentRight="true"
+	            android:src="@drawable/arrow_right_color"/>
+	        <LinearLayout 
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:orientation="vertical"
+	            android:layout_toLeftOf="@id/img_arrow_right">
+	            <LinearLayout 
+	                android:layout_width="match_parent"
+	                android:layout_height="wrap_content"
+	                android:orientation="horizontal">
+		            <TextView 
+		                android:id="@+id/tv_name"
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:textColor="@color/text_black"/>
+	            	<TextView 
+		                android:id="@+id/tv_phone"
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:layout_marginLeft="30dp"
+		                android:textColor="@color/text_black"/>
+	            </LinearLayout>
+	            <TextView 
+	                android:id="@+id/tv_address"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:textColor="@color/text_gray"/>
+	        </LinearLayout>
+	    </RelativeLayout>
+	</LinearLayout>    
+	
+       </LinearLayout>
    <RelativeLayout
        android:id="@+id/lable_transportation" 
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
        android:padding="10dp"
-       android:background="@color/white">
+	   android:background="@drawable/border_bottom_gray">
        <TextView 
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
@@ -153,9 +234,6 @@
            android:layout_centerVertical="true"
            android:layout_toLeftOf="@id/ico_right"/>
    </RelativeLayout >
-    <View android:layout_width="match_parent"
-       android:layout_height="1dp"
-       android:background="@color/activity_bg"/>
    <RelativeLayout 
        android:layout_width="match_parent"
        android:layout_height="match_parent">
