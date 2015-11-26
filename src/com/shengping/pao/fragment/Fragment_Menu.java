@@ -1,8 +1,15 @@
 package com.shengping.pao.fragment;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.android.volley.VolleyError;
 import com.shengping.pao.Activity_AboutUs;
 import com.shengping.pao.Activity_Business_Enter;
 import com.shengping.pao.Activity_Collection;
@@ -16,11 +23,16 @@ import com.shengping.pao.MyApplication;
 import com.shengping.pao.R;
 import com.shengping.pao.adapter.Adapter_Home_My;
 import com.shengping.pao.adapter.adapterData;
+import com.shengping.pao.util.MyHttp;
 import com.shengping.pao.util.MyUtil;
+import com.shengping.pao.util.UrlUtil;
+import com.shengping.pao.util.MyHttp.MyHttpCallBack;
+import com.shengping.pao.view.LoadingDialog;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -31,8 +43,9 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class Fragment_Menu extends Fragment implements OnClickListener,OnItemClickListener{
+public class Fragment_Menu extends Fragment implements OnClickListener,OnItemClickListener,MyHttpCallBack{
 
 	private View contentView;
 	private TextView tv_username,//ÓÃ»§Ãû
@@ -60,6 +73,11 @@ public class Fragment_Menu extends Fragment implements OnClickListener,OnItemCli
 	public void setName(String name){
 		tv_username.setText(name);
 		tv_btn_logout.setVisibility(View.VISIBLE);
+	}
+	private void logout(){
+		tv_username.setText("ÇëµÇÂ½/×¢²á");
+		tv_btn_logout.setVisibility(View.GONE);
+		MyApplication.getInstence().setUser(null);
 	}
 	public void setMoney(){
 		adapter.setTotalMoney(MyApplication.getInstence().getUser().getMoney());
@@ -120,6 +138,13 @@ public class Fragment_Menu extends Fragment implements OnClickListener,OnItemCli
 			Intent intent=new Intent(getContext(),Activity_Login.class);
 			startActivity(intent);
 
+		}else if(v.getId()==R.id.tv_btn_logout){
+			LoadingDialog.showWindow(getContext());
+			Map<String, String> params=new HashMap<>();
+			params.put("token", MyApplication.getInstence().getUser().getToken());
+			params.put("phone", MyApplication.getInstence().getUser().getUserName());
+			MyHttp http=new MyHttp(getContext());
+			http.Http_post(UrlUtil.getUrl("logout", UrlUtil.Service), params, this);
 		}
 	}
 	@Override
@@ -149,5 +174,35 @@ public class Fragment_Menu extends Fragment implements OnClickListener,OnItemCli
 			Intent intent=new Intent(getContext(),Activity_AboutUs.class);
 			startActivity(intent);
 		}
+	}
+	@Override
+	public void onResponse(JSONObject response) {
+		if(LoadingDialog.isShowing()){
+			LoadingDialog.dismiss();
+		}
+		try {
+			if(response.getBoolean("status")){
+				logout();
+			}else{
+				Toast.makeText(getContext(), response.getString("message"), Toast.LENGTH_LONG).show();
+			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	@Override
+	public void onErrorResponse(VolleyError error) {
+		if(LoadingDialog.isShowing()){
+			LoadingDialog.dismiss();
+		}
+		error.printStackTrace();
+		try {
+			Log.e("Volley", new String(error.networkResponse.data, "GBK"));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		MyUtil.alert("Çë¼ì²éÍøÂçºóÖØÊÔ", getActivity());
 	}
 }

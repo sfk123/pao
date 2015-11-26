@@ -146,7 +146,7 @@ public class Fragment_content extends Fragment implements OnItemClickListener,On
 		}
 	}
 	private boolean checkLogin(){
-		if(MyApplication.getInstence().getUser().getToken()!=null){
+		if(MyApplication.getInstence().getUser()!=null&&MyApplication.getInstence().getUser().getToken()!=null){
 			return true;
 		}else{
 			Intent intent=new Intent(getContext(),Activity_Login.class);

@@ -1,14 +1,17 @@
 package com.shengping.pao;
 
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.android.volley.VolleyError;
+import com.shengping.pao.model.Address;
 import com.shengping.pao.model.PaotuiInfo;
 import com.shengping.pao.util.MyHttp;
 import com.shengping.pao.util.MyUtil;
@@ -20,12 +23,14 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class Activity_ConfirmOrder  extends Activity implements OnClickListener,MyHttpCallBack{
 	private ImageView img_select_1,img_select_2,img_select_3,img_select_4;
@@ -38,7 +43,8 @@ public class Activity_ConfirmOrder  extends Activity implements OnClickListener,
 	private PaotuiInfo paotui;
 	private double coast;//费用
 	private JSONObject location_start,location_end;
-	private String address_start,address_end,transportation;
+	private String address_start,transportation;
+	private Address address;
 	@SuppressLint("SimpleDateFormat")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -46,18 +52,19 @@ public class Activity_ConfirmOrder  extends Activity implements OnClickListener,
 		setContentView(R.layout.activity_confirm_order);
 		TextView tv_title=(TextView)findViewById(R.id.tv_title);
 		tv_title.setText("确定订单");
+		
+		address=(Address)getIntent().getSerializableExtra("address");
 		TextView tv_start=(TextView)findViewById(R.id.tv_start);
 		address_start=getIntent().getStringExtra("start");
 		transportation=getIntent().getStringExtra("transportation");
 		tv_start.setText(address_start);
 		TextView tv_end=(TextView)findViewById(R.id.tv_end);
-		address_end=getIntent().getStringExtra("end");
-		tv_end.setText(address_end);
+		tv_end.setText(address.getAddress());
 		ImageView btn_back=(ImageView)findViewById(R.id.btn_back);
 		tv_remarkes=(TextView)findViewById(R.id.tv_remarkes);
 		tv_remarkes.setText(getIntent().getStringExtra("remarkes"));
 		tv_phone=(TextView)findViewById(R.id.tv_phone);
-		tv_phone.setText(getIntent().getStringExtra("phone"));
+		tv_phone.setText(address.getMobile());
 		Button btn_confirm=(Button)findViewById(R.id.btn_confirm);
 		RelativeLayout lable_coast=(RelativeLayout)findViewById(R.id.lable_coast);
 		RelativeLayout pay_express=(RelativeLayout)findViewById(R.id.pay_express);
@@ -164,7 +171,7 @@ public class Activity_ConfirmOrder  extends Activity implements OnClickListener,
 			startActivity(intent);
 		}else if(v.getId()==R.id.btn_confirm){
 			if(pay_type.equals("pay_express")){
-				LoadingDialog.showWindow(this);
+				try{
 				Map<String, String> params=new HashMap<String, String>();
 				params.put("token", MyApplication.getInstence().getUser().getToken());
 				params.put("UserId", MyApplication.getInstence().getUser().getId()+"");
@@ -174,13 +181,19 @@ public class Activity_ConfirmOrder  extends Activity implements OnClickListener,
 				params.put("Areaid", MyApplication.getInstence().getAreaId());//当前城市编码
 				params.put("Ordercontent", tv_remarkes.getText().toString());//订单备注
 				params.put("phone", tv_phone.getText().toString());//电话
-				params.put("location_start", location_start.toString());//
-				params.put("location_end", location_end.toString());//
-				params.put("address_start", address_start);//
-				params.put("address_end", address_end);//
-				params.put("transportation", transportation);//交通工具
+				params.put("addressid", address.getId()+"");//收获地址
+				params.put("StartLocation", location_start.toString());//
+				params.put("StartAddress", address_start);//
+				JSONObject attache=new JSONObject();
+				attache.put("transportation", transportation);
+				params.put("attache", attache.toString());//附属信息
 				MyHttp http=new MyHttp(this);
+				LoadingDialog.showWindow(this);
 				http.Http_post(UrlUtil.getUrl("downOrder", UrlUtil.Service), params, this);
+				}catch(JSONException e){
+					e.printStackTrace();
+					Toast.makeText(this, "出错了："+e.getMessage(), Toast.LENGTH_LONG).show();
+				}
 			}else{
 //				params.put("FwType", "1");
 			}
@@ -188,12 +201,33 @@ public class Activity_ConfirmOrder  extends Activity implements OnClickListener,
 	}
 	@Override
 	public void onResponse(JSONObject response) {
-		// TODO Auto-generated method stub
-		
+		if(LoadingDialog.isShowing()){
+			LoadingDialog.dismiss();
+		}
+		try {
+			Toast.makeText(this, response.getString("message"), Toast.LENGTH_LONG).show();
+			if(response.getBoolean("status")){
+				
+			}
+			
+		} catch (JSONException e) {
+			Toast.makeText(this, "出错了："+e.getMessage(), Toast.LENGTH_LONG).show();
+			e.printStackTrace();
+		}
 	}
 	@Override
 	public void onErrorResponse(VolleyError error) {
-		// TODO Auto-generated method stub
-		
+		if(LoadingDialog.isShowing()){
+			LoadingDialog.dismiss();
+		}
+		error.printStackTrace();
+		try {
+			if(error.networkResponse!=null)
+			Log.e("Volley", new String(error.networkResponse.data, "GBK"));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Toast.makeText(this, "出现错误，请检查网络后重试", Toast.LENGTH_LONG).show();
 	}
 }

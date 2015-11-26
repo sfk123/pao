@@ -7,6 +7,7 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.alibaba.fastjson.JSON;
 import com.android.volley.VolleyError;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.core.SearchResult;
@@ -63,7 +64,12 @@ public class Activity_Help_Push extends Activity implements OnClickListener,MyHt
 	private double destence;//路程
 	private boolean http_paotui=false;
 	private boolean http_destence=false;
-	private int addressid=0;//收货地址id
+	private Address address;//收货地址
+	private MyHttp http;
+	private boolean isinit=false;
+	private int htp_type=1;
+	private final int http_getAddress=1;
+	private final int http_getPaotui=2;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -92,6 +98,21 @@ public class Activity_Help_Push extends Activity implements OnClickListener,MyHt
 		tv_message=(EditText)findViewById(R.id.tv_message);
 		layout_add_address=(LinearLayout)findViewById(R.id.layout_add_address);
 		layout_add_address.setOnClickListener(this);
+		findViewById(R.id.layout_address_default).setOnClickListener(this);
+		http=new MyHttp(this);
+	}
+	@Override
+	public void onWindowFocusChanged(boolean hasFocus) { 
+	    super.onWindowFocusChanged(hasFocus);
+	    if(!isinit&&hasFocus){
+	    	isinit=true;
+	    	LoadingDialog.showWindow(this);
+	    	htp_type=http_getAddress;
+	    	Map<String, String> params=new HashMap<String, String>();
+	    	params.put("token", MyApplication.getInstence().getUser().getToken());
+	    	params.put("userid", MyApplication.getInstence().getUser().getId()+"");
+	    	http.Http_post(UrlUtil.getUrl("getDefaultAddress", UrlUtil.Service), params, this);
+	    }
 	}
 	@Override
 	public void onClick(View v) {
@@ -111,25 +132,32 @@ public class Activity_Help_Push extends Activity implements OnClickListener,MyHt
 			if(start==null){
 				MyUtil.alert("请选择发货地址",this);
 				return;
-			}else if(addressid==0){
+			}else if(address==null){
 				MyUtil.alert("请选择收货地址",this);
 				return;
 			}else{
+				try{
 				http_destence=false;
 				http_paotui=false;
-				MyHttp http=new MyHttp(this);
-				Map<String, String> params=new HashMap<String, String>();
-				params.put("areaid", MyApplication.getInstence().getAreaId());
-				http.Http_post(UrlUtil.getUrl("getpaotui", UrlUtil.Service), params, this);
 				mSearch = RoutePlanSearch.newInstance();
 			    mSearch.setOnGetRoutePlanResultListener(listener);
 			    PlanNode stNode = PlanNode.withLocation(start);
+			    JSONObject json_end=new JSONObject(address.getsGPRS());
+			    end=new LatLng(json_end.getDouble("lat"), json_end.getDouble("long"));
 		        PlanNode enNode = PlanNode.withLocation(end);
 		        mSearch.drivingSearch((new DrivingRoutePlanOption())
 		                .from(stNode)
 		                .to(enNode));
+				Map<String, String> params=new HashMap<String, String>();
+				params.put("areaid", MyApplication.getInstence().getAreaId());
+				htp_type=http_getPaotui;
+				http.Http_post(UrlUtil.getUrl("getpaotui", UrlUtil.Service), params, this);
+				}catch(JSONException e){
+					e.printStackTrace();
+					Toast.makeText(this, "出错了："+e.getMessage(), Toast.LENGTH_LONG).show();
+				}
 			}
-		}else if(v.getId()==R.id.layout_add_address){
+		}else if(v.getId()==R.id.layout_add_address||v.getId()==R.id.layout_address_default){
 			Intent intent=new Intent(this,Activity_SelectAddress.class);
 			startActivityForResult(intent, request_end);
 		}
@@ -151,41 +179,53 @@ public class Activity_Help_Push extends Activity implements OnClickListener,MyHt
 //				   end=new LatLng(lat, latlong);
 			   }
 			}else if(requestCode==request_end){
-				layout_add_address.setVisibility(View.GONE);
-				layout_address_default.setVisibility(View.VISIBLE);
-				Address address=(Address)data.getSerializableExtra("address");
-				addressid=address.getId();
-				TextView tv_name=(TextView)layout_address_default.findViewById(R.id.tv_name);
-				tv_name.setText(address.getRealName());
-				TextView tv_phone=(TextView)layout_address_default.findViewById(R.id.tv_phone);
-				tv_phone.setText(address.getMobile());
-				TextView tv_address=(TextView)layout_address_default.findViewById(R.id.tv_address);
-				tv_address.setText(address.getAddress());
+				address=(Address)data.getSerializableExtra("address");
+				setAddress(address);
 			}
 		}
+	}
+	private void setAddress(Address address){
+		layout_add_address.setVisibility(View.GONE);
+		layout_address_default.setVisibility(View.VISIBLE);
+		TextView tv_name=(TextView)layout_address_default.findViewById(R.id.tv_name);
+		tv_name.setText(address.getRealName());
+		TextView tv_phone=(TextView)layout_address_default.findViewById(R.id.tv_phone);
+		tv_phone.setText(address.getMobile());
+		TextView tv_address=(TextView)layout_address_default.findViewById(R.id.tv_address);
+		tv_address.setText(address.getAddress());
 	}
 	@Override
 	public void onResponse(JSONObject response) {
 		try {
 			System.out.println(response);
-			if(response.getBoolean("status")){
-				JSONObject data=response.getJSONObject("data");
-				PaotuiInfo paotui=new PaotuiInfo();
-				paotui.setId(data.getInt("id"));
-				paotui.setKefu(data.getString("keFuTell"));
-				paotui.setLJPTF(data.getDouble("ljptf"));
-				paotui.setMidnight_cost(data.getDouble("midnight_cost"));
-				paotui.setMidnight_time(new JSONObject(data.getString("midnight_time")));
-				paotui.setMRGLS(data.getInt("mrgls"));
-				paotui.setName(data.getString("companyName"));
-				paotui.setQibujia(data.getDouble("qibujia"));
-				paotui.setTianqi(data.getString("tianqi"));
-				paotui.setTianqifei(data.getDouble("tianqifei"));
-				paotui.setTime(data.getString("yinYeTime"));
-				MyApplication.getInstence().setPaotuiInfo(paotui);
-				Fragment_content.getInstence().refreshView();
-				http_paotui=true;
-				httpOK();
+			if(htp_type==http_getPaotui){
+				if(response.getBoolean("status")){
+					JSONObject data=response.getJSONObject("data");
+					PaotuiInfo paotui=new PaotuiInfo();
+					paotui.setId(data.getInt("id"));
+					paotui.setKefu(data.getString("keFuTell"));
+					paotui.setLJPTF(data.getDouble("ljptf"));
+					paotui.setMidnight_cost(data.getDouble("midnight_cost"));
+					paotui.setMidnight_time(new JSONObject(data.getString("midnight_time")));
+					paotui.setMRGLS(data.getInt("mrgls"));
+					paotui.setName(data.getString("companyName"));
+					paotui.setQibujia(data.getDouble("qibujia"));
+					paotui.setTianqi(data.getString("tianqi"));
+					paotui.setTianqifei(data.getDouble("tianqifei"));
+					paotui.setTime(data.getString("yinYeTime"));
+					MyApplication.getInstence().setPaotuiInfo(paotui);
+					Fragment_content.getInstence().refreshView();
+					http_paotui=true;
+					httpOK();
+				}
+			}else if(htp_type==http_getAddress){
+				clacleDialog();
+				if(response.getBoolean("status")){
+					address=JSON.parseObject(response.getString("data"), Address.class);
+					setAddress(address);
+				}else{
+					Toast.makeText(this, response.getString("message"), Toast.LENGTH_LONG).show();
+				}
 			}
 		} catch (JSONException e) {
 			clacleDialog();
@@ -258,6 +298,7 @@ public class Activity_Help_Push extends Activity implements OnClickListener,MyHt
 			intent.putExtra("transportation", tv_transportation.getText().toString());
 			intent.putExtra("remarkes", tv_message.getText().toString());
 			intent.putExtra("destence", destence);
+			intent.putExtra("address", address);
 			startActivity(intent);
 		}
 	}
